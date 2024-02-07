@@ -6,19 +6,20 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>3.0.6</version>
-		<relativePath /> 
+		<version>3.2.1</version>
+		<relativePath />
 	</parent>
 
-	<groupId>com.solace.samples.spring.boot</groupId>
-	<artifactId>autoconfig-receiver</artifactId>
+	<groupId>works.integration</groupId>
+	<artifactId>userservice-sub</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>jar</packaging>
-	<name>autoconfig-receiver</name>
-	<description>Sample Spring Boot Autoconfig PubSub+ Receiver</description>
+	<name>userservice-sub</name>
+	<description>EDA use service subscriber</description>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<java.version>17</java.version>
 	</properties>
 
 	<build>
@@ -32,9 +33,33 @@
 
 	<dependencies>
 		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-validation</artifactId>
+		</dependency>
+		<dependency>
 			<groupId>com.solace.spring.boot</groupId>
 			<artifactId>solace-jms-spring-boot-starter</artifactId>
- 			<version>5.0.0</version>
+			<version>5.0.0</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.postgresql</groupId>
+			<artifactId>postgresql</artifactId>
+			<scope>runtime</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+			<optional>true</optional>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-data-jpa</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+			<optional>true</optional>
 		</dependency>
 	</dependencies>
 </project>

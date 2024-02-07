@@ -1,7 +1,6 @@
-package com.solace.samples.spring.boot;
+package works.integration.userservice;
 
 import jakarta.annotation.PostConstruct;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
@@ -10,13 +9,15 @@ import org.springframework.jms.connection.CachingConnectionFactory;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
+import java.util.HashMap;
+import java.util.Map;
 
 @SpringBootApplication
 @EnableScheduling
-public class SpringBootSender {
+public class SpringBootPublisher {
 
 	public static void main(String[] args) {
-		SpringApplication.run(SpringBootSender.class, args);
+		SpringApplication.run(SpringBootPublisher.class, args);
 	}
 
 	@Autowired
@@ -31,17 +32,21 @@ public class SpringBootSender {
 
 		// By default Spring Integration uses Queues, but if you set this to true you
 		// will send to a PubSub+ topic destination
-		jmsTemplate.setPubSubDomain(false);
+		jmsTemplate.setPubSubDomain(true);
 	}
 
-	@Value("SpringTestQueue")
-	private String queueName;
+	@Value("${topic.name}")
+	private String topicName;
 
 	@Scheduled(fixedRate = 5000)
 	public void sendEvent() throws Exception {
-		String msg = "Hello World " + System.currentTimeMillis();
-		System.out.println("==========SENDING MESSAGE========== " + msg);
-		jmsTemplate.convertAndSend(queueName, msg);
+		Map<String, Object> user = new HashMap<>();
+		user.put("firstName", "John");
+		user.put("lastName", "Doe");
+		user.put("age", 25);
+		user.put("gender", "male");
+		System.out.println("==========SENDING MESSAGE========== " + user);
+		jmsTemplate.convertAndSend(topicName, user);
 	}
 
 }
