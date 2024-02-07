@@ -1,126 +1,30 @@
-version: '2.1'
-
-networks:
-  hanet: {}
-  
-x-environment:
-  &default-environment
-  username_admin_globalaccesslevel: admin
-  username_admin_password: ${ADMIN_PASSWORD:-admin}
-  system_scaling_maxconnectioncount: 100
-  redundancy_enable: "yes"
-  redundancy_group_password: topsecret
-  redundancy_group_node_primary_connectvia: primary
-  redundancy_group_node_primary_nodetype: message_routing
-  redundancy_group_node_backup_connectvia: backup
-  redundancy_group_node_backup_nodetype: message_routing
-  redundancy_group_node_monitoring_connectvia: monitoring
-  redundancy_group_node_monitoring_nodetype: monitoring
-  
-x-common:
-  &default-common
-  image: solace/solace-pubsub-standard:${TAG:-latest}
-  shm_size: 1g
-  ulimits:
-    core: -1
-    nofile:
-      soft: 2448
-      hard: 38048
-  networks:
-    - hanet
+version: '3.9'
 
 services:
-
-  primary:
-    container_name: primary
-    hostname: primary
+  solace:
+    image: solace/solace-pubsub-standard
     ports:
-      - "212:2222"
-    volumes:
-      - storage-group-1:/var/lib/solace
-    environment: 
-      << : *default-environment
-      routername: primary
-      configsync_enable: "yes"
-      redundancy_matelink_connectvia: backup
-      redundancy_activestandbyrole: primary
-      service_semp_tlsport: 1943
-    << : *default-common
-
-  backup:
-    container_name: backup
-    hostname: backup
-    ports:
-      - "312:2222"
-    volumes:
-      - storage-group-2:/var/lib/solace
+      - "8080:8080"
+      - "55555:55555"
+      - "8008:8008"
+      - "1883:1883"
+      - "8000:8000"
+      - "5672:5672"
+      - "9000:9000"
+      - "2222:2222"
+    shm_size: 2g
     environment:
-      << : *default-environment
-      routername: backup
-      configsync_enable: "yes"
-      redundancy_matelink_connectvia: primary
-      redundancy_activestandbyrole: backup
-      service_semp_tlsport: 1943
-    << : *default-common
-
-  monitoring:
-    container_name: monitoring
-    hostname: monitoring
-    ports:
-      - "412:2222"
-    volumes:
-      - storage-group-3:/var/lib/solace
-    environment:
-      << : *default-environment
-      routername: monitoring
-      nodetype: monitoring
-      service_semp_tlsport: 1943
-    << : *default-common
-
-  lb:
-    container_name: lb
-    image: 'haproxy:latest'
-    user: 0:0
-    volumes:
-      - ./assertMaster.perl:/assertMaster.perl
-    environment:
-      ADMIN_USERNAME: admin
-      ADMIN_PASSWORD: ${ADMIN_PASSWORD:-admin}
-    entrypoint:
-      - /bin/bash
-      - "-c"
-      - "perl /assertMaster.perl"
-    ports:
-      - '8008:8008'
-      - '1443:1443'
-      - '1943:1943'
-      - '1883:1883'
-      - '5671:5671'
-      - '5672:5672'
-      - '8000:8000'
-      - '8080:8080'
-      - '8443:8443'
-      - '8883:8883'
-      - '9000:9000'
-      - '9443:9443'
-      - '55554:55555'
-      - '55003:55003'
-      - '55443:55443'
-      - '1936:1936'
-    networks:
-      - hanet
+      username_admin_globalaccesslevel: admin
+      username_admin_password: admin
 
   db:
-    image: 'user-postgres:latest'
-    build:
-      context: ./docker/postgres
+    image: 'postgres:13.1-alpine'
     restart: always
     container_name: db
     environment:
       POSTGRES_USER: compose-postgres
       POSTGRES_PASSWORD: compose-postgres
-    ports:
-      - "5432:5432"
+
   pgadmin:
     image: dpage/pgadmin4:latest
     restart: always
@@ -131,8 +35,24 @@ services:
       - "5050:80"
     depends_on:
       - db
-
-volumes:
-  storage-group-1:
-  storage-group-2:
-  storage-group-3:
+  sub:
+    image: 'user-service-sub:latest'
+    restart: on-failure
+    build:
+      context: ./subscriber
+    depends_on:
+      - db
+      - solace
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/compose-postgres
+      SPRING_DATASOURCE_USERNAME: compose-postgres
+      SPRING_DATASOURCE_PASSWORD: compose-postgres
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+  pub:
+    image: 'user-service-pub:latest'
+    restart: on-failure
+    build:
+      context: ./publisher
+    depends_on:
+      - solace
+      - sub
