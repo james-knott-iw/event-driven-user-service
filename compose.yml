@@ -55,4 +55,3 @@ services:
       context: ./publisher
     depends_on:
       - solace
-      - sub
