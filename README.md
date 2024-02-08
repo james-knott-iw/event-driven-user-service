@@ -150,7 +150,7 @@ Once successfully logged in, you will be brought to the dashboard home page. To 
 Now if you look at `Databases`, you will see `compose-postgres` this is the Postgres database holding the `Users` table for our Spring Boot API. Here you can explore the Postgres database and manage it using the admin UI.
 
 ### View Database Data
-There are two two methods to view the data.
+There are two methods to view the data stored in the `users` table.
 #### Method One
 1. Under `compose-postgres`, open the `Schemas` tab.
 2. Next, open the `public` tab.
