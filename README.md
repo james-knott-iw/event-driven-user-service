@@ -155,7 +155,7 @@ There are two two methods to view the data.
 1. Under `compose-postgres`, open the `Schemas` tab.
 2. Next, open the `public` tab.
 3. Open the `Tables` tab.
-4. Right click `users`, select `View/Edit Data` and finally click All Rows.
+4. Right click `users`, select `View/Edit Data` and finally click `All Rows`.
 
 #### Method Two
 1. Right click the `compose-postgres` tab.
