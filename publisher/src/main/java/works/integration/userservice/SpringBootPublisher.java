@@ -68,7 +68,7 @@ public class SpringBootPublisher {
 	@Value("${topic.name}")
 	private String topicName;
 
-	@Scheduled(fixedRate = 5000)
+	@Scheduled(initialDelay = 50000, fixedRate = 5000)
 	public void sendEvent() throws Exception {
 		Map<String, Object> user = new HashMap<>();
 		user.put("firstName", "John");
