@@ -130,9 +130,9 @@ docker-compose down
 
 ## Access the pgAdmin Dashboard and View Data
 
-**NOTE - The Solace Event Broker can take around a minute or so to start up fully. Until the Event Broker is running, events can not be published. Therfore, initially the Users table will be empty.**
+**NOTE - The Solace Event Broker can take around a minute or so to start up fully. Until the Event Broker is running, events can not be published. Therefore, initially the Users table will not exist as it relies on the subscriber service to create the table.**
 
-The pgAdmin dashboard is available at [http://localhost:5050](http://localhost:5050). The first time accessing the dashboard you will have to login.  
+The pgAdmin dashboard is available at [http://localhost:5050](http://localhost:5050). The first time accessing the dashboard you will have to login, it may take around a minute for it to be accessible after intial start up.  
 
 - Your email address will be whatever you defined in the [pgadmin](#pgadmin) service environment variable `PGADMIN_DEFAULT_EMAIL`.
 - Your password will be whatever you defined in the [pgadmin](#pgadmin) service environment variable `PGADMIN_DEFAULT_PASSWORD`.
