@@ -34,12 +34,12 @@ gh repo clone james-knott-iw/event-driven-user-service
 
 Open the `/event-driven-user-service` directory in a terminal or IDE.
 
-## User-service
+## Publisher and Subscriber
 
 To begin, enter the [/publisher](/publisher) directory:
 
 ```bash
-cd user-service
+cd publisher
 ```
 
 Build the publishing Spring boot application .jar file which will be located at `/target/userservice-pub-0.0.1.jar`.
