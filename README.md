@@ -6,7 +6,7 @@ This repository contains the code for two Spring Boot event-driven microservices
 
 - Java JDK17+
 - Maven
-- Docker (Version 2.6.1 or lower if using windows. There is current a bug with the COPY command in 2.7+)
+- Docker (Version 2.6.1 or lower if using windows. There is currently a bug with the COPY command in 2.7+)
 
 ## Getting Started
 
