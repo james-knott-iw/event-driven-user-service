@@ -32,10 +32,10 @@ public class SpringBootSubscriber {
 					"Message Received at " + new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS").format(receiveTime)
 							+ " with user data: " + userData);
 			// Extract user attributes from the userData map and create a User object
-			String firstName = (String) userData.get("firstName");
-			String lastName = (String) userData.get("lastName");
+			String firstName = (String) userData.get("first_name");
+			String lastName = (String) userData.get("last_name");
 			Integer age = (Integer) userData.get("age");
-			String gender = (String) userData.get("gender");
+			String gender = (String) userData.get("sex");
 			User user = new User(firstName, lastName, age, gender);
 
 			// Save the received user data to the database
